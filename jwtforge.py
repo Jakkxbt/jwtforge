@@ -28,6 +28,7 @@ class Colours:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    DIM = '\033[2m'
 
 
 def c_print(colour, text):
@@ -36,6 +37,20 @@ def c_print(colour, text):
         print(f"{colour}{text}{Colours.ENDC}")
     else:
         print(text)
+
+
+def print_banner():
+    """CobraSEC branded banner. Shown only on an interactive terminal so piped output stays clean."""
+    if not sys.stdout.isatty():
+        return
+    g, c, d, b, e = (Colours.OKGREEN, Colours.OKCYAN, Colours.DIM,
+                     Colours.BOLD, Colours.ENDC)
+    print(
+        f"{g}╾━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╼{e}\n"
+        f"{b}{c}    J W T F O R G E{e}   {g}▓▒░ CobraSEC ░▒▓{e}\n"
+        f"{d}    JWT Attack Toolkit  ·  Attack to Defend{e}\n"
+        f"{g}╾━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╼{e}"
+    )
 
 
 def b64url_decode(data):
@@ -105,9 +120,7 @@ def cmd_decode(token):
         c_print(Colours.FAIL, f"[ERROR] {e}")
         return 1
 
-    c_print(Colours.BOLD, "\n╔════════════════════════════════════════════════════════════════╗")
-    c_print(Colours.BOLD, "║                    JWT DECODE & ANALYSIS                         ║")
-    c_print(Colours.BOLD, "╚════════════════════════════════════════════════════════════════╝\n")
+    c_print(Colours.OKGREEN, "\n▰▱▰▱  DECODE & ANALYSIS  ▱▰▱▰\n")
 
     # Header
     c_print(Colours.OKCYAN, "┌── HEADER")
@@ -552,6 +565,8 @@ def main():
                             help='Path prefix for injection (default: path/to/key)')
 
     args = parser.parse_args()
+
+    print_banner()
 
     if not args.command:
         parser.print_help()
